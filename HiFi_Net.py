@@ -76,7 +76,7 @@ class HiFi_Net():
             output = self.FENet(img_input)
             mask1_fea, mask1_binary, out0, out1, out2, out3 = self.SegNet(output, img_input)
             res, prob = one_hot_label_new(out3)
-            class_name = classes[int(res)]
+            class_name = classes[int(res[0])]
             res = level_1_convert(res)[0]
             if not verbose:
                 return res, prob[0], class_name
