@@ -68,16 +68,21 @@ class HiFi_Net():
                 res: binary result for real and forged.
                 prob: the prob being the forged image.
         """
+        classes = ['real', 'splicing', 'faceshifter-2', 'DDIM', 'faceshifter-4',
+           'DDPM-5', 'inpainting', 'DDPM-7', 'DDPM-8', 'Style2GANada', 
+           'StarGANv2', 'BigGAN', 'BETAVAE']
         with torch.no_grad():
             img_input = self._transform_image(image_name)
             output = self.FENet(img_input)
             mask1_fea, mask1_binary, out0, out1, out2, out3 = self.SegNet(output, img_input)
             res, prob = one_hot_label_new(out3)
+            class_name = classes[int(res)]
             res = level_1_convert(res)[0]
             if not verbose:
-                return res, prob[0]
+                return res, prob[0], class_name
             else:
                 self._normalized_threshold(res, prob[0])
+                return res, prob[0], class_name
 
     def localize(self, image_name):
         """
